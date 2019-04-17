@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <style>
+        body{
+
+            background-color: grey;
+        }
+
+    </style>
+
+
+        <script>
+           document.addEventListener("DOMContentLoaded", ()=> {
+                document.querySelector("#name").onkeyup = ()=> {
+
+                    const roomName = document.querySelector("#name").value;
+                    const status = document.querySelector("#status");
+                    const enter = document.querySelector("#create");
+
+                    if(roomName.length < 4){
+                        status.innerHTML = "choose room name";
+                        status.style.color = "black";
+                        enter.disabled = true;
+                        }
+
+                    if (roomName.length > 3) {
+
+                        //send a request//
+                        var request = new XMLHttpRequest();
+                        request.open("POST", "/roomStatus")
+                        const data = new FormData();
+                        data.append('name', roomName);
+                        request.send(data);
+
+
+                        // on receiving response//
+                        request.onload = ()=> {
+                            const data = JSON.parse(request.responseText);
+                            if (data.success) {
+                            status.innerHTML = "name available";
+                            status.style.color = "blue";
+                            enter.disabled = false;
+                            }
+
+                            else {
+                            status.innerHTML = "name not available";
+                            status.style.color = "#75031c";
+                            enter.disabled = true;
+                            }
+
+                        };
+                  };
+
+              };
+            });
+
+
+        </script>
+</head>
+<body>
+<h1>CS50 CHAT</h1>
+<form action="{{url_for('creating_room')}}" method ="post">
+<input id="name" name="roomName" autocomplete="off" type="text">
+<div id ="status">choose name for room</div>
+<br>
+<button id ="create" disabled>create room</button>
+</form>
+
+</body>
+</html>

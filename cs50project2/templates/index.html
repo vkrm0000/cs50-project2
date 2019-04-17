@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cs50chat</title>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script>
+    </script>
+
+    <style>
+        body{
+
+            text-align: center;
+            background-color: grey;
+            }
+        {
+            padding-left:;
+            margin-right: 10px;
+            color: blue;
+            }
+
+        #onlineUsers{
+            border: 2px solid black;
+            height: 200px;
+            width: 150px;
+            margin-left:70%;
+            margin-top: 2%;
+            padding:10px;
+            overflow: scroll;
+
+            }
+
+    </style>
+
+</head>
+<body>
+<h1>cs50chat</h1>
+<div>logged in as: {{username}}</div>
+<div id="onlineUsers">
+<p class="usersOnline">users Online:</p>
+<ul  class="usersOnline">
+    {% for user in users %}
+     <li >{{user}}</li>
+    {% endfor %}
+</ul>
+    </div>
+<div>
+    <ol>
+        LIVE ROOMS:
+        {% for room in channel %}
+        <li><a href="{{url_for('chat_room',roomName=room)}}">{{room}}</a></li>
+        {% endfor %}
+        <br>
+        <a href="{{url_for('create_room')}}">create new room</a>
+    </ol>
+</body>
+</html>

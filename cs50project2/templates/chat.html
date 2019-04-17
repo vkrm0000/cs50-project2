@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cs50chat</title>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+            socket.on('connect', () => {
+                 document.querySelector("#send").onclick = ()=> {
+                    const text = document.querySelector("#words").value;
+                    const user = document.querySelector("#user_name").value;
+                    socket.emit({{code}}, {"text": text,"user": user});
+                    document.querySelector("#words").value = "";
+                 }
+
+            });
+
+            socket.on({{code}}, data=> {
+                const li = document.createElement('li');
+                li.innerHTML = `${data.message}`;
+                document.querySelector("#list").append(li);
+             });
+
+         });
+
+
+    </script>
+
+
+</head>
+<body>
+<h1>cs50chat</h1>
+<ul id="list">
+    {% for chat in chats %}
+     <li>{{chat}}</li>
+    {% endfor %}
+</ul>
+
+   <input type ="text" id="user_name" placeholder="user name">
+   <input type="text" id="words">
+   <button id ='send'>send</button>
+
+
+
+
+
+</body>
+</html>

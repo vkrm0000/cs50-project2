@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>cs50chat</title>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script>
+
+        function autoScroll(scrollLength){
+                window.scrollBy(0,scrollLength);
+                }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+            socket.on('connect', () => {
+                 // broadcast data
+                 document.querySelector("#send").onclick = ()=> {
+                    const text = document.querySelector("#words").value;
+                    socket.emit("{{code}}",{"text": text});
+
+                    document.querySelector("#words").value = "";
+                    document.querySelector("#words").focus();
+
+                 }
+            });
+            // receive data for chat message
+            socket.on("{{code}}", data=> {
+                const li = document.createElement('li');
+                li.innerHTML = data.chat;
+                document.querySelector("#list").append(li);
+
+             });
+
+        });
+
+    </script>
+     <style>
+        body{
+
+            text-align: center;
+            background-color: grey;
+            }
+
+        #chats{
+
+            border: 2px solid black;
+            height: 500px;
+            width: 400px;
+            text-align: left;
+            overflow: auto;
+            margin-left: 40%;
+            }
+        #words{
+             position: -webkit-sticky;
+             position: sticky;
+        }
+
+    </style>
+</head>
+<body onload="autoScroll(1000)">
+<h1>cs50chat</h1>
+<section id="chats">
+<nav>
+    <ol id="list">
+    {% for chat in chats %}
+     <li>{{chat}}</li>
+    {% endfor %}
+</ol>
+<div id="chatMessage">
+
+    <label for="words">{{user}}</label>: <input type="text" id="words">
+    <button id ='send'>send</button>
+
+</div>
+</nav>
+</section>
+<div id ="consol">
+    <ul id="console">
+
+    </ul>
+</div>
+<a href="{{url_for('leave_chat')}}">leave chat</a>
+</body>
+</html>
