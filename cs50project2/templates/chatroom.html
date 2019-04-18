@@ -12,10 +12,23 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+            var input = document.querySelector("#words");
+            var box = document.querySelector("#chats");
+            var boxHeight = document.querySelector("#chats").scrollHeight;
+            console.log(`height is ${boxHeight}`);
+            box.scrollBy(0, boxHeight);
+            input.addEventListener("keyup", function(event) {
+                console.log("keyup");
+                if (event.keyCode === 13) {
+                    console.log("event 13");
+                    document.querySelector("#send").click();
+                    }
+            });
 
             socket.on('connect', () => {
                  // broadcast data
                  document.querySelector("#send").onclick = ()=> {
+
                     const text = document.querySelector("#words").value;
                     socket.emit("{{code}}",{"text": text});
 
@@ -26,60 +39,83 @@
             });
             // receive data for chat message
             socket.on("{{code}}", data=> {
-                const li = document.createElement('li');
+                const li = document.createElement('p');
+                const hr = document.createElement('hr');
                 li.innerHTML = data.chat;
                 document.querySelector("#list").append(li);
+                document.querySelector("#list").append(hr);
 
+                    box.scrollBy(0, 500);
              });
 
         });
 
     </script>
      <style>
+           #header{
+              margin-top:0px;
+              margin-bottom:0px;
+              height: 100px;
+              background-color: #6486bc;
+              color: white;
+              }
+
         body{
 
-            text-align: center;
-            background-color: grey;
+
+            background-color: #e5e6e8;
             }
 
         #chats{
 
-            border: 2px solid black;
+            border: 1px solid black;
             height: 500px;
             width: 400px;
             text-align: left;
             overflow: auto;
-            margin-left: 40%;
+            color: blue;
+            //background-color: white;
             }
         #words{
-             position: -webkit-sticky;
-             position: sticky;
+             height: 30px;
+             width: 400px;
+             
         }
 
     </style>
 </head>
-<body onload="autoScroll(1000)">
+<body>
+<div id="header">
 <h1>cs50chat</h1>
+channel: {{code}}
+</div>
 <section id="chats">
 <nav>
-    <ol id="list">
+    <div id="list">
     {% for chat in chats %}
-     <li>{{chat}}</li>
+     <p>{{chat}}</p>
+        <hr>
     {% endfor %}
-</ol>
+
+
+    </div>
+
 <div id="chatMessage">
 
-    <label for="words">{{user}}</label>: <input type="text" id="words">
-    <button id ='send'>send</button>
 
 </div>
 </nav>
 </section>
-<div id ="consol">
-    <ul id="console">
+
 
     </ul>
 </div>
+ <label for="words">{{user}}</label>
+<br>
+<input type="text" id="words">
+    <button id ='send'>send</button>
+<br>
+<br>
 <a href="{{url_for('leave_chat')}}">leave chat</a>
 </body>
 </html>
