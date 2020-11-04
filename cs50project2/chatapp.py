@@ -10,7 +10,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 socketio = SocketIO(app)
 
-users = ["user", "admin"]
+users = ["default_user", "admin"]
 channels = []
 rooms = []
 
